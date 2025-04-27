@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disciplinas</title>
+    <link rel="stylesheet" href="{% static 'css/disciplinas.css' %}">
+</head>
+<body>
+    <header>
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Sair</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </header>
+
+    <h1>Disciplinas</h1>
+
+    <ul>
+        {% for disciplina in disciplinas %}
+            <li>
+                <a href="{% url 'detalhes_disciplina' disciplina.id %}">
+                    {{ disciplina.nome }}
+                </a> - Média: {{ disciplina.media_notas }}
+            </li>
+        {% empty %}
+            <li>Não há disciplinas cadastradas no momento.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

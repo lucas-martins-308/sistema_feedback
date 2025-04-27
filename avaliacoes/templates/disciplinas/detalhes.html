@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ disciplina.nome }}</title>
+    <link rel="stylesheet" href="{% static 'css/detalhes.css' %}">
+</head>
+<body>
+    <header>
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Sair</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </header>
+
+    <h2>{{ disciplina.nome }}</h2>
+    <p class="media">Média das notas: {{ disciplina.media_notas }}</p>
+
+    <a class="btn-avaliar" href="{% url 'avaliar_disciplina' disciplina.id %}">Avaliar</a>
+
+    <h3>Feedbacks</h3>
+    <ul class="feedback-list">
+      {% for feedback in feedbacks %}
+        <li>
+          <strong>{% if feedback.anonimo %}Anônimo{% else %}{{ feedback.aluno.username }}{% endif %}</strong>:
+          <span class="nota">Nota: {{ feedback.nota }}</span><br>
+          <p class="comentario">{{ feedback.comentario }}</p>
+          {% if feedback.aluno == request.user %}
+            <a href="{% url 'editar_feedback' feedback.id %}">Editar</a> |
+            <a href="{% url 'excluir_feedback' feedback.id %}">Excluir</a>
+          {% endif %}
+        </li>
+      {% empty %}
+        <li>Nenhum feedback ainda.</li>
+      {% endfor %}
+    </ul>
+
+    <a class="btn-voltar" href="{% url 'lista_disciplinas' %}">Voltar</a>
+</body>
+</html>
